@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Be Back Soon!</title>
+    <meta name="description" content="Down for maintenance!">
+	
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Poppins:wght@400;500&family=Questrial&display=swap');
+
+		*, *::before, *::after {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		a {
+			color: #ec1f27;
+			text-decoration: none;
+			font-weight: bold;
+		}
+
+		a:hover {
+			color: orange;
+			text-decoration: none;
+		}
+
+		.logo {
+			width: 100%;          
+			max-width: 250px;     
+			height: auto;
+			margin: 15px auto 25px auto;
+			display: block;
+		}
+
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100%;
+			/* top | right (left + 10px shadow) | bottom (top + 10px shadow) | left */
+			padding: 24px 38px 34px 28px;
+		}
+
+		.card {
+			font-family: "Poppins", sans-serif;
+			font-weight: 500;
+			color: #221E22
+			width: 100%;
+			max-width: 700px;
+			height: auto;
+			background: #FA9500;
+			border: 3px solid #221E22;
+			box-shadow: 12px 12px 0 #221E22;
+			overflow: hidden;
+			transition: all 0.3s ease;
+			padding-bottom: 1.5em;
+		}
+
+		.head {
+			font-family: "Caprasimo", serif;
+			font-size: clamp(24px, 5vw, 36px); 
+			line-height: 1.2;
+			font-weight: 400;
+			width: 100%;
+			height: auto;         
+			background: #F7FFF7;
+			padding: 10px 16px;
+			color: #ec1f27;
+			border-bottom: 3px solid #221E22;
+		}
+
+		.content {
+			padding: 12px 20px;
+			font-size: 16px;
+			line-height: 1.6;
+			font-weight: 600;
+		}
+
+		.button {
+			display: inline-block; 
+			padding: 10px 16px;
+			margin-top: 10px;
+			border: 3px solid #221E22;
+			box-shadow: 3px 3px 0 #221E22;
+			font-weight: 750;
+			background: #B7E873;
+			color: #221E22;        
+			transition: all 0.3s ease;
+			cursor: pointer;
+		}
+
+		.button:hover {
+			translate: 1.5px 1.5px;
+			box-shadow: 1.5px 1.5px 0 #221E22;
+			background: #F6A2C8;
+			color: #221E22;
+		}
+
+		.button:active {
+			translate: 3px 3px;
+			box-shadow: 0 0 0 #221E22;
+		}
+
+		@media (max-width: 480px) {
+			.container {
+			padding: 20px 35px 26px 24px;
+			}
+			
+			.card {
+			box-shadow: 6px 6px 0 #221E22;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="card">
+			<div class="head">Hang on to your posts!</div>
+			<div class="content">
+				<img src="https://i.imgur.com/VQPk2DJ.png" alt="bud with wrench" class="logo">
+				<p>Sorry posting comrades, but we are currently performing essential security updates to the National Discussion Forum.</p>
+				<p>We anticipate that the Discussion Forum will be back online and fully functional by <strong>Friday, November 20 at 3am PT / 6am ET</strong>.</p>
+				<a href="https://status.ntc.dsausa.org/" target="_blank" rel="noopener noreferrer" class="button">Check the live status</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
