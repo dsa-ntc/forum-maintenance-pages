@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 16px 72px;
+    background: linear-gradient(180deg,
+      #0b0713 0%, #120a22 30%, #1a0f2e 55%,
+      #241238 78%, #150a24 100%);
+    color: #e6e1f2;
+    font-family: Georgia, "Times New Roman", serif;
+    text-align: center;
+  }
+
+  ::selection { background: #ff9d45; color: #120a22; }
+
+  /* ── Night sky ─────────────────────────────────────────────────────────── */
+  .sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+  .stars { position: absolute; inset: 0; background-repeat: repeat; }
+  .stars-1 {
+    background-image:
+      radial-gradient(1.6px 1.6px at 22px 34px,  rgba(255,255,255,.85), transparent 100%),
+      radial-gradient(1.2px 1.2px at 132px 88px, rgba(255,255,255,.60), transparent 100%),
+      radial-gradient(2.0px 2.0px at 252px 40px, rgba(255,238,214,.80), transparent 100%),
+      radial-gradient(1.2px 1.2px at 322px 210px, rgba(255,255,255,.55), transparent 100%),
+      radial-gradient(1.6px 1.6px at 88px 258px, rgba(255,255,255,.75), transparent 100%),
+      radial-gradient(1.2px 1.2px at 388px 150px, rgba(255,255,255,.50), transparent 100%);
+    background-size: 440px 330px;
+    animation: twinkle 4.5s ease-in-out infinite;
+  }
+  .stars-2 {
+    background-image:
+      radial-gradient(1.2px 1.2px at 40px 120px, rgba(255,255,255,.50), transparent 100%),
+      radial-gradient(1.6px 1.6px at 180px 34px, rgba(255,214,170,.55), transparent 100%),
+      radial-gradient(1.2px 1.2px at 300px 180px, rgba(255,255,255,.45), transparent 100%),
+      radial-gradient(2.0px 2.0px at 420px 280px, rgba(255,255,255,.40), transparent 100%);
+    background-size: 520px 380px;
+    animation: twinkle 6.5s ease-in-out infinite reverse;
+    opacity: .7;
+  }
+  @keyframes twinkle { 0%, 100% { opacity: .65; } 50% { opacity: 1; } }
+
+  .moon {
+    position: absolute; top: 7%; right: 9%;
+    width: clamp(70px, 9vw, 110px); aspect-ratio: 1; border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #fdfbf3 0 55%, #d8d2c2 100%);
+    box-shadow: 0 0 42px 14px rgba(255,240,200,.25), 0 0 120px 40px rgba(255,240,200,.08);
+  }
+
+  .cloud {
+    position: absolute; border-radius: 50%;
+    filter: blur(18px); background: rgba(24, 15, 40, .75);
+    animation: drift linear infinite;
+  }
+  .c1 { top: 6%;  left: -30%; width: 46vw; height: 12vh; opacity: .6;  animation-duration: 95s; }
+  .c2 { top: 18%; left: -45%; width: 60vw; height: 16vh; opacity: .5;  animation-duration: 140s; animation-delay: -60s; }
+  .c3 { top: 2%;  left: -20%; width: 34vw; height: 10vh; opacity: .42; animation-duration: 70s;  animation-delay: -30s; }
+  @keyframes drift { from { transform: translateX(0); } to { transform: translateX(160vw); } }
+
+  .bat { position: absolute; top: var(--top, 16%); left: -6%; width: var(--s, 34px);
+         opacity: .85; animation: fly var(--d, 30s) linear infinite; animation-delay: var(--delay, 0s); }
+  .bat svg { display: block; width: 100%; height: auto; fill: #0a0614;
+             animation: flap 1.7s ease-in-out infinite; transform-origin: 50% 60%; }
+  .b1 { --top: 14%; --s: 38px; --d: 30s; }
+  .b2 { --top: 25%; --s: 22px; --d: 44s; --delay: -18s; }
+  .b3 { --top: 8%;  --s: 28px; --d: 37s; --delay: -9s; }
+  @keyframes fly {
+    from { transform: translateX(0) translateY(0); }
+    25%  { transform: translateX(30vw) translateY(-3vh); }
+    50%  { transform: translateX(60vw) translateY(2vh); }
+    75%  { transform: translateX(95vw) translateY(-2vh); }
+    to   { transform: translateX(125vw) translateY(0); }
+  }
+  @keyframes flap {
+    0%, 100% { transform: scaleY(1) rotate(-7deg); }
+    50%      { transform: scaleY(.82) rotate(5deg); }
+  }
+
+  .ground {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 16vh; z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(6,4,12,0) 0%, #06040c 68%);
+  }
+
+  /* ── Lightning ─────────────────────────────────────────────────────────── */
+  .storm { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0; }
+  .storm .glow { position: absolute; inset: 0; }
+  .storm-1 .glow { background: radial-gradient(55% 42% at 26% -8%, rgba(186,158,255,.42), rgba(186,158,255,0) 65%); }
+  .storm-2 .glow { background: radial-gradient(55% 42% at 76% -8%, rgba(214,190,255,.40), rgba(214,190,255,0) 65%); }
+  .storm .bolt {
+    position: absolute; top: -1vh;
+    width: clamp(110px, 15vw, 230px); height: auto;
+    filter: drop-shadow(0 0 12px rgba(150,110,255,.9));
+  }
+  .storm-1 .bolt { left: 9vw; }
+  .storm-2 .bolt { right: 10vw; }
+  .storm-1 { animation: strike-1 9s linear infinite; animation-delay: 1.4s; }
+  .storm-2 { animation: strike-2 13.7s linear infinite; animation-delay: 5.3s; }
+  @keyframes strike-1 {
+    0%, 63%   { opacity: 0; }
+    63.5%     { opacity: .95; }
+    64.5%     { opacity: .08; }
+    65.5%     { opacity: .80; }
+    67%       { opacity: 0; }
+    68.5%     { opacity: .65; }
+    70%       { opacity: 0; }
+    72%       { opacity: .45; }
+    74%, 100% { opacity: 0; }
+  }
+  @keyframes strike-2 {
+    0%, 38%   { opacity: 0; }
+    38.6%     { opacity: .90; }
+    39.6%     { opacity: .10; }
+    40.8%     { opacity: .75; }
+    42%       { opacity: 0; }
+    44%       { opacity: .50; }
+    46%, 100% { opacity: 0; }
+  }
+
+  /* ── Scene ─────────────────────────────────────────────────────────────── */
+  .scene { position: relative; z-index: 2; width: 100%; max-width: 660px; }
+
+  .grave { position: relative; width: max-content; max-width: 100%; margin: 0 auto; }
+  .mound {
+    position: absolute; left: 50%; bottom: -18px; transform: translateX(-50%);
+    width: 150%; max-width: 130vw; height: 54px; border-radius: 50%; z-index: 1;
+    background: radial-gradient(closest-side, #06040c 0%, rgba(6,4,12,.85) 45%, rgba(6,4,12,0) 75%);
+  }
+
+  .tombstone {
+    position: relative; z-index: 2;
+    width: min(470px, 90vw);
+    margin: 0 auto;
+    padding: clamp(26px, 5.5vw, 40px) clamp(20px, 4.5vw, 34px) clamp(30px, 5.5vw, 44px);
+    background: linear-gradient(168deg,
+      #a9afba 0%, #8a8f9b 30%, #6d7280 62%, #565b66 100%);
+    border: 1px solid rgba(10, 8, 18, .5);
+    border-radius: 54% 54% 10px 10px / 60% 60% 10px 10px;
+    box-shadow:
+      inset 0 3px 5px rgba(255,255,255,.35),
+      inset 0 -20px 40px rgba(10,10,20,.45),
+      inset 0 0 60px rgba(20,16,30,.18),
+      0 26px 60px rgba(0,0,0,.6);
+    animation: creak 9s ease-in-out infinite;
+  }
+  @keyframes creak {
+    0%, 88%, 96%, 100% { transform: rotate(0deg); }
+    91%                { transform: rotate(-1.1deg); }
+    93.5%              { transform: rotate(0.8deg); }
+  }
+
+  .engraved-rule {
+    width: 76px; height: 2px; margin: 4px auto 18px;
+    border-radius: 2px;
+    background: rgba(24, 24, 34, .5);
+    box-shadow: 0 1px 0 rgba(255,255,255,.25);
+  }
+
+  .engraved {
+    color: #2e2f3a;
+    text-shadow: 0 1px 1px rgba(255,255,255,.28), 0 -1px 1px rgba(0,0,0,.38);
+  }
+  .epitaph-rip { margin: 4px 0 10px; font-size: clamp(2.4rem, 8vw, 3.3rem); letter-spacing: .06em; }
+  .epitaph-top { margin: 0; font-size: clamp(1.05rem, 3.4vw, 1.3rem); letter-spacing: .12em; }
+  .epitaph-cause { margin: 12px 0 0; font-size: clamp(.78rem, 2.5vw, .9rem); letter-spacing: .16em; }
+  .epitaph-return { margin: 8px 0 0; font-size: clamp(.78rem, 2.5vw, .9rem); font-style: italic; letter-spacing: .08em; }
+
+  /* ── Notice copy ───────────────────────────────────────────────────────── */
+  .notice { margin: clamp(56px, 11vh, 82px) auto 0; max-width: 620px; }
+  .notice-title {
+    margin: 0 0 12px;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    color: #ffb454;
+    text-shadow: 0 0 18px rgba(255,150,60,.3);
+  }
+  .message { margin: 0; font-size: clamp(.98rem, 2.6vw, 1.06rem); line-height: 1.65; color: #d9d3ea; }
+  .status-line { margin: 18px 0 0; line-height: 1.6; }
+  .status-link {
+    color: #ffa748; font-weight: 700;
+    text-underline-offset: 3px;
+    text-shadow: 0 0 16px rgba(255,150,60,.35);
+  }
+  .status-link:hover { color: #ffc07a; text-shadow: 0 0 22px rgba(255,170,90,.55); }
+  .muted { color: #a99ecb; font-size: .9em; }
+  .timer-line { margin: 16px 0 0; line-height: 1.6; }
+  .timer { color: #ffb454; font-weight: 700; text-shadow: 0 0 14px rgba(255,150,60,.4); }
+  .contact { margin: 22px 0 0; font-size: .9rem; color: #b3abd0; }
+  .contact a { color: #c4b5ff; }
+  .footer { margin: 28px 0 0; font-size: .85rem; color: #8f86ad; font-style: italic; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stars, .cloud, .bat, .bat svg, .storm, .tombstone { animation: none; }
+    .cloud { transform: translateX(40vw); }
+    .storm { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+  <!-- Night sky -->
+  <div class="sky" aria-hidden="true">
+    <div class="stars stars-1"></div>
+    <div class="stars stars-2"></div>
+    <div class="moon"></div>
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <span class="bat b1"><svg viewBox="0 0 38 20"><path d="M2 14 Q8 2 15 10 Q15 5 19 5 Q23 5 23 10 Q30 2 36 14 Q31 12 29 16 Q25 13 20 17 L18 19 L16 17 Q11 13 7 16 Q5 12 2 14 Z"/></svg></span>
+    <span class="bat b2"><svg viewBox="0 0 38 20"><path d="M2 14 Q8 2 15 10 Q15 5 19 5 Q23 5 23 10 Q30 2 36 14 Q31 12 29 16 Q25 13 20 17 L18 19 L16 17 Q11 13 7 16 Q5 12 2 14 Z"/></svg></span>
+    <span class="bat b3"><svg viewBox="0 0 38 20"><path d="M2 14 Q8 2 15 10 Q15 5 19 5 Q23 5 23 10 Q30 2 36 14 Q31 12 29 16 Q25 13 20 17 L18 19 L16 17 Q11 13 7 16 Q5 12 2 14 Z"/></svg></span>
+  </div>
+  <div class="ground" aria-hidden="true"></div>
+
+  <!-- Lightning -->
+  <div class="storm storm-1" aria-hidden="true">
+    <div class="glow"></div>
+    <svg class="bolt" viewBox="0 0 200 340">
+      <path d="M92 0 L58 128 L96 122 L48 262 L82 250 L36 340" fill="none" stroke="rgba(167,139,255,.5)" stroke-width="12" stroke-linejoin="round"/>
+      <path d="M92 0 L58 128 L96 122 L48 262 L82 250 L36 340" fill="none" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="storm storm-2" aria-hidden="true">
+    <div class="glow"></div>
+    <svg class="bolt" viewBox="0 0 200 340">
+      <path d="M108 0 L140 116 L102 112 L154 240 L120 232 L168 340" fill="none" stroke="rgba(180,150,255,.5)" stroke-width="12" stroke-linejoin="round"/>
+      <path d="M108 0 L140 116 L102 112 L154 240 L120 232 L168 340" fill="none" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- Tombstone -->
+  <main class="scene">
+    <div class="grave">
+      <div class="mound" aria-hidden="true"></div>
+      <section class="tombstone">
+        <div class="engraved-rule" aria-hidden="true"></div>
+        <h1 class="engraved epitaph-rip">${epitaphTitle}</h1>
+        <p class="engraved epitaph-top">${epitaphTop}</p>
+        <p class="engraved epitaph-cause">${epitaphCause}</p>
+        <p class="engraved epitaph-return">${epitaphReturn}</p>
+      </section>
+    </div>
+
+    <!-- Notice -->
+    <div class="notice">
+      <h2 class="notice-title">${title}</h2>
+      <p class="message">${message}</p>
+      <p class="status-line"><a class="status-link" href="${statusUrl}" target="_blank" rel="noopener">${statusLinkText}</a></p>
+      <p class="timer-line">If all goes to plan, we'll be back from the dead in <span class="timer">${estimatedTime}</span>.</p>
+      ${contactLine}
+    </div>
+  </main>
+</body>
+</html>
